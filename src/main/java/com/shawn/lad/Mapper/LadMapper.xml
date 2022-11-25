@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shawn.lad.Mapper.LadMapper">
+    <select id="getallinformation" resultType="com.shawn.lad.domain.Lad">
+        SELECT * FROM lad
+    </select>
+    <select id="searchinformation" resultType="com.shawn.lad.domain.Lad">
+        SELECT LAD_ID,Sequence,Sequence_Length,Name,Source,Activity,Protein_existence,Comments,Pubmed_ID,Target_Organism,Reference,Author,Title FROM lad
+        <if test="search.field != 'Sequence_Length'">
+            WHERE ${search.field} LIKE '%${search.information}%'
+        </if>
+        <if test="search.field == 'Sequence_Length'">
+            WHERE ${search.field} = #{search.information}
+        </if>
+        <if test="search.andor1 != '' and search.andor1 != null and search.andor1 == 'and' and search.field1 != 'Sequence_Length'">
+            and ${search.field1} LIKE '%${search.information1}%'
+        </if>
+        <if test="search.andor1 != '' and search.andor1 != null and search.andor1 == 'or' and search.field1 != 'Sequence_Length'">
+            or ${search.field1} LIKE '%${search.information1}%'
+        </if>
+        <if test="search.andor1 != '' and search.andor1 != null and search.andor1 == 'not' and search.field1 != 'Sequence_Length'">
+            and ${search.field1} not LIKE '%${search.information1}%'
+        </if>
+        <if test="search.andor1 != '' and search.andor1 != null and search.andor1 == 'and' and search.field1 == 'Sequence_Length'">
+            and ${search.field1} = #{search.information1}
+        </if>
+        <if test="search.andor1 != '' and search.andor1 != null and search.andor1 == 'or' and search.field1 == 'Sequence_Length'">
+            or ${search.field1} = #{search.information1}
+        </if>
+        <if test="search.andor1 != '' and search.andor1 != null and search.andor1 == 'not' and search.field1 == 'Sequence_Length'">
+            and ${search.field1} != #{search.information1}
+        </if>
+        <if test="search.andor2 != '' and search.andor1 != null and search.andor2 == 'and' and search.field2 != 'Sequence_Length'">
+            and ${search.field2} LIKE '%${search.information2}%'
+        </if>
+        <if test="search.andor2 != '' and search.andor2 != null and search.andor2 == 'or' and search.field2 != 'Sequence_Length'">
+            or ${search.field2} LIKE '%${search.information2}%'
+        </if>
+        <if test="search.andor2 != '' and search.andor2 != null and search.andor2 == 'not' and search.field2 != 'Sequence_Length'">
+            and ${search.field2} not LIKE '%${search.information2}%'
+        </if>
+        <if test="search.andor2 != '' and search.andor1 != null and search.andor2 == 'and' and search.field2 == 'Sequence_Length'">
+            and ${search.field2} = #{search.information2}
+        </if>
+        <if test="search.andor2 != '' and search.andor2 != null and search.andor2 == 'or' and search.field2 == 'Sequence_Length'">
+            or ${search.field2} = #{search.information2}
+        </if>
+        <if test="search.andor2 != '' and search.andor2 != null and search.andor2 == 'not' and search.field2 == 'Sequence_Length'">
+            and ${search.field2} != #{search.information2}
+        </if>
+        <if test="search.andor3 != '' and search.andor3 != null and search.andor3 == 'and' and search.field3 != 'Sequence_Length'">
+            and ${search.field3} LIKE '%${search.information3}%'
+        </if>
+        <if test="search.andor3 != '' and search.andor3 != null and search.andor3 == 'or' and search.field3 != 'Sequence_Length'">
+            or ${search.field3} LIKE '%${search.information3}%'
+        </if>
+        <if test="search.andor3 != '' and search.andor3 != null and search.andor3 == 'not' and search.field3 != 'Sequence_Length'">
+            and ${search.field3} not LIKE '%${search.information3}%'
+        </if>
+        <if test="search.andor3 != '' and search.andor3 != null and search.andor3 == 'and' and search.field3 == 'Sequence_Length'">
+            and ${search.field3} = #{search.information3}
+        </if>
+        <if test="search.andor3 != '' and search.andor3 != null and search.andor3 == 'or' and search.field3 == 'Sequence_Length'">
+            or ${search.field3} = #{search.information3}
+        </if>
+        <if test="search.andor3 != '' and search.andor3 != null and search.andor3 == 'not' and search.field3 == 'Sequence_Length'">
+            and ${search.field3} != #{search.information3}
+        </if>
+    </select>
+
+    <insert id="insertSubmit">
+        insert into submit_lad values(#{submit.name},#{submit.source},#{submit.activity},#{submit.sequence},#{submit.personname},#{submit.email},#{submit.Sequence_Length},#{submit.Protein_existence},#{submit.Comments},#{submit.Target_Organism},#{submit.Reference},#{submit.Author},#{submit.Title},#{submit.Pubmed_ID})
+    </insert>
+    <select id="getallsubmitinformation" resultType="com.shawn.lad.domain.submit">
+        select * from submit_lad
+    </select>
+
+    <select id="getDomainsInfo" resultType="com.shawn.lad.domain.protein_domain">
+        select LAD_ID,LAD_Domain,LAD_Family,Description from lad_domain
+        <if test="search != ''">
+            where LAD_ID LIKE concat('%',#{search},'%') or LAD_Domain LIKE concat('%',#{search},'%') or LAD_Family LIKE concat('%',#{search},'%') or Description LIKE concat('%',#{search},'%')
+        </if>
+        limit #{limit} offset #{offset}
+    </select>
+    <select id="getSanji" resultType="com.shawn.lad.domain.Sanji">
+        select * from lad_sanji where ID = #{ladId}
+        <if test="only == 'yes'">
+            limit 1
+        </if>
+    </select>
+    <select id="getSanjiBycode" resultType="com.shawn.lad.domain.Sanji">
+        select * from lad_sanji where ID = #{ladId} and PDBCode = #{code}
+    </select>
+</mapper>
